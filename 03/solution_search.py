@@ -1,15 +1,14 @@
-# Final Demo Version (edited)
+# Final Demo Version (edited by Robert Koch)
 from collections import deque
 
 # State representation: (alex, wolf, goat, cabbage)
-# alex, wolf, goat, cabbage are either 0 (left) or 1 (right)
-initial_state = (0, 0, 0, 0)  # Alex, wolf, goat, cabbage all on the left
-goal_state = (1, 1, 1, 1)     # Alex, wolf, goat, cabbage all on the right
+initial_state = (0, 0, 0, 0)  # all on the left
+goal_state = (1, 1, 1, 1)     # all on the right
 
 def is_valid_state(state):
     alex, wolf, goat, cabbage = state
 
-    # Ensure the goat is not left alone with the wolf etc.
+    #!Ensure the goat is not left alone with the wolf or cabbage!
     if ((wolf == goat or goat == cabbage) and goat != alex):
         return False
     return True
@@ -42,7 +41,9 @@ def get_neighbors(state):
             new_cabbage = cabbage - cabbage_move
 
         # Ensure the new state is within valid bounds (0 or 1)
-        if not (0 <= new_wolf <= 1 and 0 <= new_goat <= 1 and 0 <= new_cabbage <= 1):
+        if not (0 <= new_wolf <= 1 and
+                0 <= new_goat <= 1 and
+                0 <= new_cabbage <= 1):
             continue
 
         new_state = (new_alex_pos, new_wolf, new_goat, new_cabbage)
@@ -73,12 +74,19 @@ def bfs():
 if __name__ == "__main__":
     solution = bfs()
     names = ['Alex', 'Wolf', 'Goat', 'Cabbage']
+    
     if solution:
         for step_number in range(len(solution)):
             print(f'[{step_number + 1}]:')
-            for character_number in range(len(solution[step_number])):
-                print(f' |- {names[character_number]} is on the {'left' if solution[step_number][character_number] == 0 else 'right'} side')
-        print(' |\n[^] Alle Figuren haben es sicher zur anderen Seite geschafft (✿◠‿◠)')
+            state = solution[step_number]
+            
+            for character_number in range(len(state)):
+                print(f' |- {names[character_number]} is on the ' \
+                      f'{'left' if state[character_number] == 0 else 'right'} ' \
+                       'side')
+                
+        print(' |\n[^] Alle Figuren haben es sicher ' \
+              'zur anderen Seite geschafft (✿◠‿◠)')
     else:
         print('[!]- Keine Lösung gefunden (っ◞‸◟c)')
 
